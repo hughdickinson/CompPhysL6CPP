@@ -1,0 +1,64 @@
+// The <vector> header provides the std::vector class template.
+#include <vector>
+// The <algorithm> header provides the std::sort algorithm.
+#include <algorithm>
+
+/* A simple class that maintains a vector of percentage
+ * scores and returns the highest score that has been stored 
+ * so far.
+ */
+class HeadOfTheClass{
+
+  /* std::vector of class assignment percentage scores
+   */
+  std::vector<double> percentageScores;
+
+  /* Boolean member datum specifies whether scores need
+   * to be sorted.
+   */
+  bool needsSorting;
+
+public :
+
+  // Default constructor
+  HeadOfTheClass():
+    needsSorting(false)
+  {}
+
+  // Empty destructor - no member data require deallocation
+  ~HeadOfTheClass(){}
+
+  /* NOTE: There are no pointer-type member data, so it is
+   * safe to rely on the compiler-provided assignment operator.	
+   */
+
+  // Method to add a new percentage score.
+  void addPercentageScore(double percentageScore){
+    // Append the new score to the vector of percentage scores
+    percentageScores.push_back(percentageScore);
+    /* The scores may need sorting. The following statement sets
+     * the needsSorting memberDatum to true.
+     */
+    needsSorting = true;
+  }
+
+  /* Method retrieves the "head of the class" i.e. the highest
+   * score that has been recorded so far.
+   */
+  double getTheHead(){
+    // check if the scores need sorting
+    if(needsSorting){
+      /* If so use the std::sort algorithm to sort the vector of scores
+       * from highest to lowest.
+       */
+      std::sort(percentageScores.begin(), percentageScores.end());
+      // The vector no longer needs sorting. Set needsSorting to false.
+      needsSorting = false;
+    }
+    /* use the back() method of std::vector to retrieve the last
+     * element, corresponding to the highest score
+     */
+    return percentageScores.back();
+  }
+};
+

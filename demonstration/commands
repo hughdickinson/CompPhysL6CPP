@@ -1,0 +1,75 @@
+# PART I: WRITING AND INCLUDING HEADER FILES IN C++:
+# ==================================================
+# The demonstration directory containing this file contains
+# a subdirectory called include, which is a conventional name
+# for a directory containing header files.
+#
+# 1) USE EMACS TO CREATE A NEW HEADER FILE:
+# =========================================
+
+emacs include/HeadOfTheClass.h &
+
+# Add an OPENING INCLUDE GUARD to the file. We will choose
+# "HEADOFTHECLASS_H" as the name of our UNIQUE MACRO. Enter
+# or copy the following lines
+
+#ifndef HEADOFTHECLASS_H
+#define HEADOFTHECLASS_H
+
+# Now add a simple class definition to the header file.
+# NOTE: If a header file contains a class defintion, it is
+# conventional for the header file name to be the class name
+# with a ".h" suffix appended.
+
+# Examine the contents of the headerDemoClass file.
+
+cat headerDemoClass
+
+# Copy the class definition that the headerDemoClass
+# file contains into include/HeadOfTheClass.h.
+#
+# Finally, add a CLOSING INCLUDE GUARD to our header file
+# enter or copy the following line into include/HeadOfTheClass.h.
+
+#endif
+
+# SAVE include/HeadOfTheClass.h and exit emacs.
+
+# 2) MODIFY AN EXISTING C++ PROGRAM TO INCLUDE THE HEADER:
+# ========================================================
+# The demonstration directory contains a file called
+# "headerDemoMainComplete.cpp" that contains a main() function
+# Some modifications are required to include HeadOfTheClass.h
+#
+# OPEN headerDemoMainComplete.cpp using emacs:
+
+emacs headerDemoMain.cpp &
+
+# Add the following include statement after the second comment:
+
+#include "HeadOfTheClass.h"
+
+# 3) BUILD THE PROGRAM:
+# =====================
+# To build the program the C preprocessor must be instructed to
+# search the "include" directory to find HeadOfTheClass.h. To
+# achieve this supply the -I flag to the invocation of clang++
+# with the flag argument "include". The following invocation generates
+# a binary executable called "headOfTheClass"
+
+clang++ -std=c++11 -Iinclude -o headOfTheClass headerDemoMain.cpp
+
+# 4) RUN THE PROGRAM:
+# ===================
+# This is accomplished in the familiar way.
+
+./headOfTheClass
+
+
+# PART II: CREATING SHARED LIBRARIES FROM C++ CODE:
+# =================================================
+
+clang++ -std=c++11 -Iinclude -shared -fPIC -o lib/libLibrary.so Library.cpp
+
+# PART III: LINKING WITH EXTERNAL LIBRARIES IN C++:
+# =================================================
