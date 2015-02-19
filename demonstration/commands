@@ -134,6 +134,8 @@ clang++ -std=c++11 -Iinclude -shared -fPIC -o lib/libLibrary.so Library.cpp
 # 2) Defines a main() function that INSTANTIATES a Library object and EXERCISES
 # its functionality.
 
+emacs VisitLibrary.cpp &
+
 # The following invocation uses the source code provided in "VisitLibrary.cpp"
 # to build a STANDALONE BINARY EXECUTABLE called "visitLibrary" that links
 # against "libLibrary.so". NOTICE that the -I flag is provided since
