@@ -68,8 +68,85 @@ clang++ -std=c++11 -Iinclude -o headOfTheClass headerDemoMain.cpp
 
 # PART II: CREATING SHARED LIBRARIES FROM C++ CODE:
 # =================================================
+#
+# AS WELL AS providing a useful mechanism for REUSING SOURCE CODE, there
+# are two other strong rationales for building shared libraries:
+#
+# 1) Upon compilation, inclusion of THE SAME SOURCE CODE into DIFFERENT
+# PROGRAMS generally produces VERY SIMILAR BINARY CODE. If multiple
+# standalone binaries incorporate essentially identical binary code, this
+# is not efficient use of system STORAGE SPACE. Storage space can be saved
+# by PRECOMPILING LOGICALLY DISTINCT and RESUSABLE subsets of source code
+# and encapsulating the resulting BINARY CODE in a separate SHARED LIBRARY
+# file that can be accessed by multiple standalone binaries.
+#
+# 2) If IMPROVEMENTS are made to the source code that is used to build a
+# shared library, and that library is used by MULTIPLE STANDALONE BINARIES,
+# then ONLY the shared library needs to be recompiled for ALL the
+# standalone binaries that use it to benefit from the improved source code.
+# If shared libraries were NOT used, then ALL the standalone binaries
+# would need to be recompiled. 
+#
+# THIS DEMONSTRATION will use source code in SEPARATE HEADER and
+# IMPLEMENTATION files to build a shared library. The HEADER file will
+# ultimately be INCLUDED in other code by USERS of the library to provide
+# DEFINITIONS of the programatic entities that the library provides. The
+# IMPLEMENTATION file contains DEFINITIONS of the entities that are declared
+# in the header file and is typically NOT distributed to library users.
+#
+# Examine the contents of the HEADER file, which is called "Library.h" and
+# is stored in the "include" subdirectory. NOTICE that "Library.h" contains
+# a DEFINITION of a class called "Library" (it is conventional for header
+# files that define classes to share the name of the class they define), which
+# ONLY provides method DECLARATIONS. DEFINITIONS are provided in the SEPARATE
+# IMPLEMENTATION file.
+
+emacs include/Library.h &
+
+# Examine the contents of the IMPLEMENTATION file which is called
+# "Library.cpp". The ".cpp" suffix is conventionally used for C++ IMPLEMENTATION
+# files. "Library.cpp" provides the OUT-OF-CLASS DEFINITIONS for the methods
+# that are declared in "Library.h". NOTICE that "Library.cpp" INCLUDES "Library.h".
+
+emacs Library.cpp &
+
+# To create a shared library from C++ source code, clang++ must be invoked
+# using TWO EXTRA FLAGS, "-shared" and "-fPIC". This demonstration also uses
+# a custom header file. Accordingly, the -I flag must also be provided to
+# instruct the C preprocessor to search the "include" subdirectory for the
+# required header file.
+#
+# The following invocation creates a shared library called "libLibrary.so"
+# in the "lib" subdirectory using the source code provided in in "Library.cpp".
+# NOTICE that the -o flag is still required in order to specify the output
+# file name.
 
 clang++ -std=c++11 -Iinclude -shared -fPIC -o lib/libLibrary.so Library.cpp
 
 # PART III: LINKING WITH EXTERNAL LIBRARIES IN C++:
 # =================================================
+#
+# To USE the "libLibrary.so" shared library that was created in the previous
+# step, a STANDALONE BINARY must be built that LINKS against libLibrary.so.
+
+# Examine the contents of VisitLibrary.cpp, which
+# 1) Includes the "Library.h" header file.
+# 2) Defines a main() function that INSTANTIATES a Library object and EXERCISES
+# its functionality.
+
+# The following invocation uses the source code provided in "VisitLibrary.cpp"
+# to build a STANDALONE BINARY EXECUTABLE called "visitLibrary" that links
+# against "libLibrary.so". NOTICE that the -I flag is provided since
+# "VisitLibrary.cpp" INCLUDES "Library.h". The -L flag is also used to
+# specify that the LINKER should search the "lib" subdirectory for shared
+# libraries. Finally the ABBREVIATED name for "libLibrary.so" ("-lLibrary")
+# is used to specify that "libLibrary.so" should be used as a "source file".
+# The LINKER that is invoked by clang++ will AUTOMATICALLY recognize that
+# this file should be linked against and NOT SIMPLY COMPILED into the binary
+# executable.  
+
+clang++ -std=c++11 -Iinclude -o visitLibrary -Llib -lLibrary VisitLibrary.cpp
+
+# Finally, invoke the standalone binary executable.
+
+./visitLibrary
