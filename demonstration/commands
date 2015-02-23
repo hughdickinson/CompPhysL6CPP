@@ -151,9 +151,10 @@ clang++ -std=c++11 -Iinclude -o visitLibrary -Llib -lLibrary VisitLibrary.cpp
 
 # Finally, invoke the standalone binary executable. For now, it is neccessary
 # to explicitly tell the operating system (technically a program called the
-# DYNAMIC LINKER) where it can find our shared library. To do this, prepend the
-# usual binary invocation with the "magical" token:
-#
-# "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:lib"
+# DYNAMIC LINKER) where it can find our shared library.
+# To do this, add the lib directory to the LD_LIBRARY_PATH using:
 
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:lib ./visitLibrary
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:lib
+
+# Then invoke the binary
+ ./visitLibrary
